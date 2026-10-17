@@ -15,18 +15,36 @@
   .breadcrumb a { text-decoration:underline; }
   .layout { display:grid; grid-template-columns:1fr 1fr; gap:32px; padding:0 24px 40px; max-width:1200px; margin:0 auto; }
   @media (max-width:900px){ .layout { grid-template-columns:1fr; } }
-  h1 { color:#005480; font-size:32px; margin-bottom:18px; }
+  h1 { color:#005480; font-size:30px; margin-bottom:14px; }
   h2 { color:#005480; font-size:22px; margin:22px 0 10px; }
-  .card { background:#e9edf2; border:1px solid #d0d7de; border-radius:8px; padding:20px; }
-  .card label { display:block; margin:10px 0 4px; font-size:15px; color:#444; }
-  .card input[type=number], .card select { width:100%; padding:10px; border:1px solid #b6c0ca; border-radius:4px; font-size:16px; background:#fbfcfd; }
-  .date-row { display:flex; gap:10px; }
-  .chk { display:flex; align-items:center; gap:8px; margin:14px 0; font-weight:bold; font-size:15px; }
-  .chk input { width:18px; height:18px; }
-  .btn-row { display:flex; gap:12px; margin-top:16px; }
-  .btn { flex:1; padding:14px; border:none; border-radius:6px; font-size:17px; font-weight:bold; cursor:pointer; }
-  .btn.calc { background:#4a8b2c; color:#fff; }
-  .btn.clear { background:#9aa0a6; color:#fff; flex:0 0 40%; }
+  h3 { color:#333; font-size:17px; margin:16px 0 6px; }
+
+  .info-bar { background:#3b6ea5; color:#fff; padding:12px 16px; font-weight:bold; border-radius:6px 6px 0 0; }
+  .info-bar .tri { display:inline-block; background:#fff; color:#3b6ea5; border-radius:50%; width:22px; height:22px; text-align:center; line-height:22px; margin-right:8px; }
+
+  .card { background:#e9edf2; border:1px solid #d0d7de; border-top:none; border-radius:0 0 8px 8px; padding:18px; }
+  .frow { display:flex; align-items:center; gap:8px; margin:10px 0; flex-wrap:wrap; }
+  .frow > label { flex:1 1 40%; min-width:120px; font-size:15px; color:#444; }
+  .frow input[type=number] { flex:1 1 110px; padding:10px; border:1px solid #b6c0ca; border-radius:4px; font-size:16px; background:#fbfcfd; min-width:80px; }
+  .frow select.unit { width:64px; padding:10px 4px; border:1px solid #b6c0ca; border-radius:4px; font-size:15px; }
+  .frow select.mSel { width:92px; padding:10px 4px; border:1px solid #b6c0ca; border-radius:4px; font-size:15px; }
+  .frow input.yr { width:88px !important; flex:0 0 88px !important; }
+  .suffix { color:#999; font-size:15px; }
+  .inword { color:#555; font-size:15px; }
+  .colhead { text-align:right; color:#555; margin:8px 0 2px; font-size:16px; }
+
+  .chk { display:flex; align-items:center; gap:10px; margin:16px 0; font-weight:bold; font-size:16px; }
+  .chk input { width:20px; height:20px; accent-color:#3b6ea5; }
+
+  .toggleLink { display:block; text-align:center; color:#0072bc; font-weight:bold; font-size:16px; text-decoration:underline; margin:14px 0; cursor:pointer; }
+
+  .btn-row { display:flex; gap:12px; margin-top:18px; justify-content:center; }
+  .btn { padding:14px 26px; border:none; border-radius:4px; font-size:17px; font-weight:bold; cursor:pointer; }
+  .btn.calc { background:#4a8b2c; color:#fff; flex:1; max-width:220px; }
+  .btn.calc:hover { background:#3f7625; }
+  .btn.clear { background:#b0b0b0; color:#fff; flex:0 0 35%; max-width:120px; }
+  .btn.clear:hover { background:#999; }
+
   .pay-header { background:#4a8b2c; color:#fff; font-size:20px; font-weight:bold; padding:14px 18px; border-radius:6px 6px 0 0; }
   table.tbl { width:100%; border-collapse:collapse; background:#fff; margin-bottom:18px; }
   .tbl th, .tbl td { border:1px solid #d0d7de; padding:10px 12px; font-size:15px; }
@@ -49,43 +67,59 @@
 <nav class="breadcrumb"><a href="index.html">home</a> / <a href="financial.html">financial</a> / mortgage calculator</nav>
 
 <main class="layout">
+  <!-- ================= FORM ================= -->
   <section>
     <h1>Mortgage Calculator</h1>
+    <div class="info-bar"><span class="tri">▼</span> Modify values and click Calculate to use</div>
     <div class="card">
-      <label>Home Price ($)</label>
-      <input type="number" id="homePrice" value="400000">
-      <label>Down Payment ($)</label>
-      <input type="number" id="downPayment" value="80000">
-      <label>Loan Term (years)</label>
-      <input type="number" id="loanTerm" value="30">
-      <label>Interest Rate (%)</label>
-      <input type="number" id="interestRate" value="6.5" step="0.01">
-      <label>Start Date</label>
-      <div class="date-row">
-        <select id="startMonth"></select>
-        <input type="number" id="startYear" value="2026">
-      </div>
+
+      <div class="frow"><label>Home Price</label><input type="number" id="homePrice" value="400000"></div>
+      <div class="frow"><label>Down Payment</label><input type="number" id="downValue" value="20"><select class="unit" id="downUnit"><option value="%">%</option><option value="$">$</option></select></div>
+      <div class="frow"><label>Loan Term</label><input type="number" id="loanTerm" value="30"><span class="suffix">years</span></div>
+      <div class="frow"><label>Interest Rate</label><input type="number" id="interestRate" value="6.5" step="0.01"><span class="suffix">%</span></div>
+      <div class="frow"><label>Start Date</label><select class="mSel" id="startMonth"></select><input type="number" class="yr" id="startYear" value="2026"></div>
+
+      <div class="chk"><input type="checkbox" id="includeTaxes"><label for="includeTaxes">Include Taxes &amp; Costs Below</label></div>
+
       <div id="taxesBox" hidden>
-        <label>Property Tax ($/year)</label>
-        <input type="number" id="propertyTax" value="4800">
-        <label>Home Insurance ($/year)</label>
-        <input type="number" id="homeInsurance" value="1200">
-        <label>PMI ($/month)</label>
-        <input type="number" id="pmi" value="0">
-        <label>HOA ($/month)</label>
-        <input type="number" id="hoa" value="0">
+        <div class="colhead">Annual Tax &amp; Cost</div>
+        <div class="frow"><label>Property Taxes</label><input type="number" id="propTaxValue" value="1.2" step="0.01"><select class="unit" id="propTaxUnit"><option value="%">%</option><option value="$">$</option></select></div>
+        <div class="frow"><label>Home Insurance</label><input type="number" id="insValue" value="1500"><select class="unit" id="insUnit"><option value="$">$</option><option value="%">%</option></select></div>
+        <div class="frow"><label>PMI Insurance</label><input type="number" id="pmiValue" value="0"><select class="unit" id="pmiUnit"><option value="$">$</option><option value="%">%</option></select></div>
+        <div class="frow"><label>HOA Fee</label><input type="number" id="hoaValue" value="0"><select class="unit" id="hoaUnit"><option value="$">$</option><option value="%">%</option></select></div>
+        <div class="frow"><label>Other Costs</label><input type="number" id="otherValue" value="0"><select class="unit" id="otherUnit"><option value="$">$</option><option value="%">%</option></select></div>
+
+        <span class="toggleLink" id="moreOptionsToggle">+ More Options</span>
+
+        <div id="moreBox" hidden>
+          <h3>Annual Tax &amp; Cost Increase</h3>
+          <div class="frow"><label>Property Taxes Increase</label><input type="number" id="propTaxInc" value="0" step="0.1"><span class="suffix">%</span></div>
+          <div class="frow"><label>Home Insurance Increase</label><input type="number" id="insInc" value="0" step="0.1"><span class="suffix">%</span></div>
+          <div class="frow"><label>HOA Fee Increase</label><input type="number" id="hoaInc" value="0" step="0.1"><span class="suffix">%</span></div>
+          <div class="frow"><label>Other Costs Increase</label><input type="number" id="otherInc" value="0" step="0.1"><span class="suffix">%</span></div>
+
+          <h3>Extra Payments</h3>
+          <div class="frow"><label>Extra Monthly Pay</label><input type="number" id="extraMonthly" value="0"><span class="inword">from</span><select class="mSel" id="emM"></select><input type="number" class="yr" id="emY" value="2026"></div>
+          <div class="frow"><label>Extra Yearly Pay</label><input type="number" id="extraYearly" value="0"><span class="inword">from</span><select class="mSel" id="eyM"></select><input type="number" class="yr" id="eyY" value="2026"></div>
+          <div class="frow"><label>Extra One-time Pay</label><input type="number" id="extraOne" value="0"><span class="inword">in</span><select class="mSel" id="eoM"></select><input type="number" class="yr" id="eoY" value="2026"></div>
+
+          <span class="toggleLink" id="addOneTimeToggle">+ Additional One-Time Payments</span>
+          <div id="oneTimeBox" hidden><div id="oneTimeRows"></div></div>
+        </div>
       </div>
-      <div class="chk"><input type="checkbox" id="includeTaxes"><label for="includeTaxes" style="margin:0">Include Taxes &amp; Costs Below</label></div>
-      <div class="chk"><input type="checkbox" id="showBiweekly"><label for="showBiweekly" style="margin:0">Show Biweekly Payback Results</label></div>
+
+      <div class="chk"><input type="checkbox" id="showBiweekly"><label for="showBiweekly">Show Biweekly Payback Results</label></div>
+
       <div class="btn-row">
-        <button class="btn calc" id="btnCalc">Calculate</button>
+        <button class="btn calc" id="btnCalc">Calculate ▶</button>
         <button class="btn clear" id="btnClear">Clear</button>
       </div>
     </div>
   </section>
 
+  <!-- ================= RESULTS ================= -->
   <section>
-    <div class="pay-header">Monthly Pay:</div>
+    <div class="pay-header">Monthly Pay: <span id="payHead">-</span></div>
     <table class="tbl">
       <thead><tr><th></th><th>Monthly</th><th>Total</th></tr></thead>
       <tbody>
@@ -97,10 +131,7 @@
       </tbody>
     </table>
 
-    <div class="pie-wrap">
-      <canvas id="pie" width="220" height="220"></canvas>
-      <div id="legend"></div>
-    </div>
+    <div class="pie-wrap"><canvas id="pie" width="220" height="220"></canvas><div id="legend"></div></div>
 
     <table class="tbl summary">
       <tbody>
@@ -138,6 +169,11 @@
 </footer>
 
 <script>
+var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var NOW = new Date();
+var CUR_MONTH = NOW.getMonth();
+var CUR_YEAR = NOW.getFullYear();
+
 function el(id) { return document.getElementById(id); }
 function num(id) { var v = parseFloat(el(id).value); return isFinite(v) ? v : 0; }
 function fmt(x, dec) {
@@ -145,8 +181,10 @@ function fmt(x, dec) {
   dec = (dec === undefined) ? 0 : dec;
   return '$' + x.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
 }
-var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function annualAmount(value, unit, price) { return (unit === '%') ? price * value / 100 : value; }
+function grow(base, incPct, yearIdx) { return base * Math.pow(1 + incPct / 100, yearIdx); }
 
+/* ---------- Pie ---------- */
 function drawPie(slices) {
   var canvas = el('pie'), ctx = canvas.getContext('2d');
   var cx = canvas.width / 2, cy = canvas.height / 2, radius = Math.min(cx, cy) - 6;
@@ -176,32 +214,45 @@ function drawPie(slices) {
   el('legend').innerHTML = html;
 }
 
-function addMonths(m, y, add) {
-  var total = m + add;
-  return { month: total % 12, year: y + Math.floor(total / 12) };
-}
-
-function buildAmortization(principal, r, monthly, n) {
-  var body = el('amortBody');
-  body.innerHTML = '';
-  var balance = principal, years = Math.ceil(n / 12);
-  for (var y = 1; y <= years; y++) {
-    var yInt = 0, yPrin = 0;
-    for (var m = 0; m < 12 && (y - 1) * 12 + m < n; m++) {
-      var interest = balance * r;
-      var princ = monthly - interest;
-      if (princ > balance) princ = balance;
-      balance -= princ;
-      yInt += interest; yPrin += princ;
-    }
-    if (balance < 0.01) balance = 0;
-    var tr = document.createElement('tr');
-    tr.innerHTML = '<td>' + y + '</td><td>' + fmt(yInt) + '</td><td>' + fmt(yPrin) + '</td><td>' + fmt(balance) + '</td>';
-    body.appendChild(tr);
-    if (balance === 0) break;
+/* ---------- Build dynamic controls ---------- */
+function buildOneTimeRows() {
+  var box = el('oneTimeRows');
+  box.innerHTML = '';
+  for (var i = 0; i < 10; i++) {
+    var div = document.createElement('div');
+    div.className = 'frow';
+    div.innerHTML = '<input type="number" class="otAmt" value="0"><span class="inword">in</span>' +
+                    '<select class="mSel otM"></select><input type="number" class="yr otY" value="' + CUR_YEAR + '">';
+    box.appendChild(div);
   }
 }
+function fillMonthSelects() {
+  var sels = document.querySelectorAll('select.mSel');
+  for (var i = 0; i < sels.length; i++) {
+    sels[i].innerHTML = '';
+    for (var m = 0; m < 12; m++) {
+      var o = document.createElement('option');
+      o.value = m; o.textContent = MONTHS[m];
+      sels[i].appendChild(o);
+    }
+  }
+}
+function collectOneTimeMap() {
+  var map = {};
+  var amts = document.querySelectorAll('.otAmt');
+  var ms   = document.querySelectorAll('.otM');
+  var ys   = document.querySelectorAll('.otY');
+  for (var i = 0; i < amts.length; i++) {
+    var a = parseFloat(amts[i].value) || 0;
+    if (a > 0) {
+      var abs = (parseInt(ys[i].value, 10) || 0) * 12 + (parseInt(ms[i].value, 10) || 0);
+      map[abs] = (map[abs] || 0) + a;
+    }
+  }
+  return map;
+}
 
+/* ---------- Biweekly simulation ---------- */
 function simulateBiweekly(principal, annualRate, monthlyPayment) {
   var perRate = annualRate / 100 / 26;
   var pay = monthlyPayment / 2;
@@ -218,9 +269,10 @@ function simulateBiweekly(principal, annualRate, monthlyPayment) {
   return { years: periods / 26, interest: interestTotal };
 }
 
+/* ---------- Main calculation ---------- */
 function calculate() {
   var price = num('homePrice');
-  var down  = num('downPayment');
+  var down  = (el('downUnit').value === '%') ? price * num('downValue') / 100 : num('downValue');
   var years = num('loanTerm');
   var rate  = num('interestRate');
   var n = Math.round(years * 12);
@@ -228,86 +280,195 @@ function calculate() {
   if (principal <= 0 || n <= 0) { alert('Please check your inputs.'); return; }
 
   var r = rate / 100 / 12;
-  var xyY = Math.pow(1 + r, n);
-  var monthly = (r === 0) ? principal / n : principal * (r * xyY) / (xyY - 1);
+  var powXY = Math.pow(1 + r, n);
+  var baseMonthly = (r === 0) ? principal / n : principal * (r * powXY) / (powXY - 1);
 
   var includeTaxes = el('includeTaxes').checked;
-  var mTax = 0, mIns = 0, mOther = 0;
+  var tax0 = 0, ins0 = 0, pmi0 = 0, hoa0 = 0, oth0 = 0;
+  var incTax = 0, incIns = 0, incHoa = 0, incOth = 0;
   if (includeTaxes) {
-    mTax   = num('propertyTax') / 12;
-    mIns   = num('homeInsurance') / 12;
-    mOther = num('pmi') + num('hoa');
+    tax0 = annualAmount(num('propTaxValue'), el('propTaxUnit').value, price);
+    ins0 = annualAmount(num('insValue'),  el('insUnit').value,  price);
+    pmi0 = annualAmount(num('pmiValue'),  el('pmiUnit').value,  price);
+    hoa0 = annualAmount(num('hoaValue'),  el('hoaUnit').value,  price);
+    oth0 = annualAmount(num('otherValue'),el('otherUnit').value,price);
+    incTax = num('propTaxInc'); incIns = num('insInc'); incHoa = num('hoaInc'); incOth = num('otherInc');
   }
-  var mTotal = monthly + mTax + mIns + mOther;
+
+  /* extras */
+  var startAbs = num('startYear') * 12 + (el('startMonth').selectedIndex || 0);
+  var emAmt = num('extraMonthly');
+  var emStart = num('emY') * 12 + (el('emM').selectedIndex || 0);
+  var eyAmt = num('extraYearly');
+  var eyMonth = el('eyM').selectedIndex || 0;
+  var eyStart = num('eyY') * 12 + eyMonth;
+  var oneMap = collectOneTimeMap();
+  var eoAmt = num('extraOne');
+  if (eoAmt > 0) {
+    var eoAbs = num('eoY') * 12 + (el('eoM').selectedIndex || 0);
+    oneMap[eoAbs] = (oneMap[eoAbs] || 0) + eoAmt;
+  }
+
+  /* simulation */
+  var balance = principal, monthIndex = 0;
+  var totalInterest = 0, totalPI = 0;
+  var totTax = 0, totIns = 0, totOther = 0;
+  var payoffAbs = -1;
+  var yInt = 0, yPrin = 0, rows = [];
+
+  while (balance > 0.005 && monthIndex < 1200) {
+    var abs = startAbs + monthIndex;
+    var yIdx = Math.floor(monthIndex / 12);
+    var interest = balance * r;
+    var princ = baseMonthly - interest;
+    var extra = 0;
+    if (abs >= emStart) extra += emAmt;
+    if (abs >= eyStart && (abs % 12) === eyMonth) extra += eyAmt;
+    if (oneMap[abs]) extra += oneMap[abs];
+    var princPay = princ + extra;
+    if (princPay > balance) princPay = balance;
+    balance -= princPay;
+    totalInterest += interest;
+    totalPI += interest + princPay;
+    yInt += interest; yPrin += princPay;
+
+    if (includeTaxes) {
+      var mT = grow(tax0, incTax, yIdx) / 12;
+      var mI = grow(ins0, incIns, yIdx) / 12;
+      var mP = pmi0 / 12;
+      var mH = grow(hoa0, incHoa, yIdx) / 12;
+      var mO = grow(oth0, incOth, yIdx) / 12;
+      totTax += mT; totIns += mI; totOther += mP + mH + mO;
+    }
+
+    monthIndex++;
+    if (monthIndex % 12 === 0 || balance <= 0.005) {
+      rows.push({ y: yIdx + 1, i: yInt, p: yPrin, b: Math.max(balance, 0) });
+      yInt = 0; yPrin = 0;
+    }
+    if (balance <= 0.005) { payoffAbs = abs; break; }
+  }
+
+  /* first-month values for Monthly column */
+  var mTax0 = includeTaxes ? tax0 / 12 : 0;
+  var mIns0 = includeTaxes ? ins0 / 12 : 0;
+  var mOth0 = includeTaxes ? (pmi0 + hoa0 + oth0) / 12 : 0;
+  var mTot0 = baseMonthly + mTax0 + mIns0 + mOth0;
   var dash = includeTaxes ? null : '-';
 
-  el('mPay').textContent   = fmt(monthly, 2);
-  el('tPay').textContent   = fmt(monthly * n);
-  el('mTax').textContent   = includeTaxes ? fmt(mTax, 2) : dash;
-  el('tTax').textContent   = includeTaxes ? fmt(mTax * n) : dash;
-  el('mIns').textContent   = includeTaxes ? fmt(mIns, 2) : dash;
-  el('tIns').textContent   = includeTaxes ? fmt(mIns * n) : dash;
-  el('mOther').textContent = includeTaxes ? fmt(mOther, 2) : dash;
-  el('tOther').textContent = includeTaxes ? fmt(mOther * n) : dash;
-  el('mTotal').textContent = fmt(mTotal, 2);
-  el('tTotal').textContent = fmt(mTotal * n);
+  el('payHead').textContent = fmt(mTot0, 2);
+  el('mPay').textContent = fmt(baseMonthly, 2);
+  el('tPay').textContent = fmt(totalPI);
+  el('mTax').textContent = includeTaxes ? fmt(mTax0, 2) : dash;
+  el('tTax').textContent = includeTaxes ? fmt(totTax) : dash;
+  el('mIns').textContent = includeTaxes ? fmt(mIns0, 2) : dash;
+  el('tIns').textContent = includeTaxes ? fmt(totIns) : dash;
+  el('mOther').textContent = includeTaxes ? fmt(mOth0, 2) : dash;
+  el('tOther').textContent = includeTaxes ? fmt(totOther) : dash;
+  el('mTotal').textContent = fmt(mTot0, 2);
+  el('tTotal').textContent = fmt(totalPI + totTax + totIns + totOther);
 
-  el('sHouse').textContent         = fmt(price);
-  el('sLoan').textContent          = fmt(principal);
-  el('sDown').textContent          = fmt(down);
-  el('sTotalPayments').textContent = fmt(monthly * n);
-  el('sTotalInterest').textContent = fmt(monthly * n - principal);
-  var payoff = addMonths(el('startMonth').selectedIndex, num('startYear'), n);
-  el('sPayoff').textContent = MONTHS[payoff.month] + ', ' + payoff.year;
+  el('sHouse').textContent = fmt(price);
+  el('sLoan').textContent = fmt(principal);
+  el('sDown').textContent = fmt(down);
+  el('sTotalPayments').textContent = fmt(totalPI);
+  el('sTotalInterest').textContent = fmt(totalInterest);
+  el('sPayoff').textContent = (payoffAbs < 0) ? '-' : MONTHS[payoffAbs % 12] + ', ' + Math.floor(payoffAbs / 12);
 
-  buildAmortization(principal, r, monthly, n);
+  var body = el('amortBody');
+  body.innerHTML = '';
+  for (var i = 0; i < rows.length; i++) {
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td>' + rows[i].y + '</td><td>' + fmt(rows[i].i) + '</td><td>' + fmt(rows[i].p) + '</td><td>' + fmt(rows[i].b) + '</td>';
+    body.appendChild(tr);
+  }
 
   drawPie([
-    { value: monthly, color: '#4a8b2c', label: 'Principal + Interest' },
-    { value: mTax,    color: '#005480', label: 'Property Tax' },
-    { value: mIns,    color: '#f0ad4e', label: 'Insurance' },
-    { value: mOther,  color: '#d9534f', label: 'PMI/HOA' }
+    { value: baseMonthly, color: '#4a8b2c', label: 'Principal + Interest' },
+    { value: mTax0, color: '#005480', label: 'Property Tax' },
+    { value: mIns0, color: '#f0ad4e', label: 'Insurance' },
+    { value: mOth0, color: '#d9534f', label: 'PMI/HOA/Other' }
   ]);
 
   if (el('showBiweekly').checked) {
-    var bw = simulateBiweekly(principal, rate, monthly);
-    var bwYears = Math.floor(bw.years);
-    var bwMonths = Math.round((bw.years - bwYears) * 12);
-    el('bwPayment').textContent = fmt(monthly / 2, 2);
-    el('bwPayoff').textContent  = bwYears + ' years ' + bwMonths + ' months';
-    el('bwSavings').textContent = fmt((monthly * n - principal) - bw.interest);
+    var bw = simulateBiweekly(principal, rate, baseMonthly);
+    var bwY = Math.floor(bw.years);
+    var bwM = Math.round((bw.years - bwY) * 12);
+    var baseInterest = baseMonthly * n - principal;
+    el('bwPayment').textContent = fmt(baseMonthly / 2, 2);
+    el('bwPayoff').textContent = bwY + ' years ' + bwM + ' months';
+    el('bwSavings').textContent = fmt(baseInterest - bw.interest);
     el('biweeklyBox').hidden = false;
   } else {
     el('biweeklyBox').hidden = true;
   }
 }
 
+/* ---------- Clear / reset ---------- */
 function clearForm() {
   el('homePrice').value = 400000;
-  el('downPayment').value = 80000;
+  el('downValue').value = 20;  el('downUnit').value = '%';
   el('loanTerm').value = 30;
   el('interestRate').value = 6.5;
+  el('startMonth').selectedIndex = CUR_MONTH;
+  el('startYear').value = CUR_YEAR;
+  el('includeTaxes').checked = false;
+  el('taxesBox').hidden = true;
+  el('propTaxValue').value = 1.2; el('propTaxUnit').value = '%';
+  el('insValue').value = 1500;    el('insUnit').value = '$';
+  el('pmiValue').value = 0;       el('pmiUnit').value = '$';
+  el('hoaValue').value = 0;       el('hoaUnit').value = '$';
+  el('otherValue').value = 0;     el('otherUnit').value = '$';
+  el('propTaxInc').value = 0; el('insInc').value = 0; el('hoaInc').value = 0; el('otherInc').value = 0;
+  el('extraMonthly').value = 0; el('emM').selectedIndex = CUR_MONTH; el('emY').value = CUR_YEAR;
+  el('extraYearly').value = 0;  el('eyM').selectedIndex = CUR_MONTH; el('eyY').value = CUR_YEAR;
+  el('extraOne').value = 0;     el('eoM').selectedIndex = CUR_MONTH; el('eoY').value = CUR_YEAR;
+  var amts = document.querySelectorAll('.otAmt');
+  var ys = document.querySelectorAll('.otY');
+  var ms = document.querySelectorAll('.otM');
+  for (var i = 0; i < amts.length; i++) {
+    amts[i].value = 0; ys[i].value = CUR_YEAR; ms[i].selectedIndex = CUR_MONTH;
+  }
+  el('moreBox').hidden = true;
+  el('moreOptionsToggle').textContent = '+ More Options';
+  el('oneTimeBox').hidden = true;
+  el('addOneTimeToggle').textContent = '+ Additional One-Time Payments';
+  el('showBiweekly').checked = false;
+  el('biweeklyBox').hidden = true;
   var ids = ['mPay','tPay','mTax','tTax','mIns','tIns','mOther','tOther','mTotal','tTotal',
              'sHouse','sLoan','sDown','sTotalPayments','sTotalInterest','sPayoff',
              'bwPayment','bwPayoff','bwSavings'];
-  for (var i = 0; i < ids.length; i++) el(ids[i]).textContent = '-';
+  for (var j = 0; j < ids.length; j++) el(ids[j]).textContent = '-';
+  el('payHead').textContent = '-';
   el('amortBody').innerHTML = '';
-  el('biweeklyBox').hidden = true;
   drawPie([]);
 }
 
+/* ---------- Init ---------- */
 function init() {
-  var sel = el('startMonth');
-  for (var i = 0; i < 12; i++) {
-    var opt = document.createElement('option');
-    opt.value = i; opt.textContent = MONTHS[i];
-    sel.appendChild(opt);
-  }
-  var now = new Date();
-  sel.selectedIndex = now.getMonth();
-  el('startYear').value = now.getFullYear();
+  buildOneTimeRows();
+  fillMonthSelects();
+  el('startMonth').selectedIndex = CUR_MONTH;
+  el('emM').selectedIndex = CUR_MONTH;
+  el('eyM').selectedIndex = CUR_MONTH;
+  el('eoM').selectedIndex = CUR_MONTH;
+  var otM = document.querySelectorAll('.otM');
+  for (var i = 0; i < otM.length; i++) otM[i].selectedIndex = CUR_MONTH;
+  el('startYear').value = CUR_YEAR;
+  el('emY').value = CUR_YEAR; el('eyY').value = CUR_YEAR; el('eoY').value = CUR_YEAR;
+
   el('includeTaxes').addEventListener('change', function () {
     el('taxesBox').hidden = !this.checked;
+  });
+  el('moreOptionsToggle').addEventListener('click', function () {
+    var box = el('moreBox');
+    box.hidden = !box.hidden;
+    this.textContent = box.hidden ? '+ More Options' : '- Fewer Options';
+  });
+  el('addOneTimeToggle').addEventListener('click', function () {
+    var box = el('oneTimeBox');
+    box.hidden = !box.hidden;
+    this.textContent = box.hidden ? '+ Additional One-Time Payments' : '- Hide Below Inputs';
   });
   el('btnCalc').addEventListener('click', calculate);
   el('btnClear').addEventListener('click', clearForm);
@@ -316,4 +477,4 @@ function init() {
 init();
 </script>
 </body>
-</html>
+ </html>
