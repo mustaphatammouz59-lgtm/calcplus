@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Mortgage Calculator – CalcPlus</title>
-<meta name="description" content="Free mortgage calculator with taxes, insurance, PMI, HOA, extra payments and a full year-by-year amortization schedule."/>
+<meta name="description" content="Free mortgage calculator with optional taxes, insurance, PMI, HOA, extra payments and a full year-by-year amortization schedule."/>
 <!-- ADSENSE: بعد القبول ضع كود الرأس هنا -->
 <style>
 *{box-sizing:border-box}
@@ -26,7 +26,7 @@ h1{color:#00427a;font-size:26px;margin:6px 0 10px}
 .form label{display:block;font-size:13px;margin:7px 0 2px;color:#333}
 .form input,.form select{width:100%;padding:7px;border:1px solid #9ab;border-radius:3px}
 .row2{display:flex;gap:6px}
-.chk{display:flex;gap:8px;align-items:center;margin:10px 0 4px;font-size:14px}
+.chk{display:flex;gap:8px;align-items:center;margin:12px 0 4px;font-size:14px;font-weight:700}
 fieldset{border:1px solid #cdd6dd;border-radius:4px;margin:10px 0 0;padding:8px}
 legend{font-size:13px;font-weight:700;color:#00427a;padding:0 6px}
 button.calc{margin-top:12px;width:100%;padding:11px;border:none;border-radius:4px;background:#4e7d1e;color:#fff;font-size:16px;font-weight:700;cursor:pointer}
@@ -62,26 +62,26 @@ footer a{color:#333}
  <div class="left">
   <h1>Mortgage Calculator</h1>
   <div class="form">
-   <label>Home Price ($)</label><input id="hp" type="number" value="400000">
-   <label>Down Payment ($)</label><input id="dp" type="number" value="80000">
-   <label>Loan Term (years)</label><input id="ty" type="number" value="30">
-   <label>Interest Rate (%)</label><input id="rt" type="number" step="0.001" value="6.5">
+   <label>Home Price ($)</label><input id="hp" type="number" value="400000" oninput="calc()">
+   <label>Down Payment ($)</label><input id="dp" type="number" value="80000" oninput="calc()">
+   <label>Loan Term (years)</label><input id="ty" type="number" value="30" oninput="calc()">
+   <label>Interest Rate (%)</label><input id="rt" type="number" step="0.001" value="6.5" oninput="calc()">
    <label>Start Date</label>
    <div class="row2">
-    <select id="sm"><option>Jan</option><option>Feb</option><option>Mar</option><option>Apr</option><option>May</option><option>Jun</option><option>Jul</option><option>Aug</option><option>Sep</option><option selected>Oct</option><option>Nov</option><option>Dec</option></select>
-    <input id="sy" type="number" value="2026">
+    <select id="sm" onchange="calc()"><option>Jan</option><option>Feb</option><option>Mar</option><option>Apr</option><option>May</option><option>Jun</option><option>Jul</option><option>Aug</option><option>Sep</option><option selected>Oct</option><option>Nov</option><option>Dec</option></select>
+    <input id="sy" type="number" value="2026" oninput="calc()">
    </div>
-   <div class="chk"><input type="checkbox" id="inc" checked style="width:auto"><span>Include taxes &amp; costs below</span></div>
-   <fieldset><legend>Annual tax &amp; monthly costs</legend>
-    <label>Property Taxes ($/year)</label><input id="ptx" type="number" value="4800">
-    <label>Home Insurance ($/year)</label><input id="ins" type="number" value="1500">
-    <label>PMI Insurance ($/month)</label><input id="pmi" type="number" value="0">
-    <label>HOA Fee ($/month)</label><input id="hoa" type="number" value="0">
-    <label>Other Costs ($/month)</label><input id="oth" type="number" value="0">
+   <div class="chk"><input type="checkbox" id="inc" style="width:auto" onchange="toggleCosts()"><span>Include Taxes &amp; Costs Below</span></div>
+   <fieldset id="costs" style="display:none"><legend>Annual tax &amp; monthly costs</legend>
+    <label>Property Taxes ($/year)</label><input id="ptx" type="number" value="4800" oninput="calc()">
+    <label>Home Insurance ($/year)</label><input id="ins" type="number" value="1500" oninput="calc()">
+    <label>PMI Insurance ($/month)</label><input id="pmi" type="number" value="0" oninput="calc()">
+    <label>HOA Fee ($/month)</label><input id="hoa" type="number" value="0" oninput="calc()">
+    <label>Other Costs ($/month)</label><input id="oth" type="number" value="0" oninput="calc()">
    </fieldset>
    <fieldset><legend>Extra payments</legend>
-    <label>Extra Monthly Pay ($)</label><input id="xm" type="number" value="0">
-    <label>Extra Yearly Pay ($)</label><input id="xy" type="number" value="0">
+    <label>Extra Monthly Pay ($)</label><input id="xm" type="number" value="0" oninput="calc()">
+    <label>Extra Yearly Pay ($)</label><input id="xy" type="number" value="0" oninput="calc()">
    </fieldset>
    <button class="calc" onclick="calc()">Calculate</button>
   </div>
@@ -123,6 +123,10 @@ footer a{color:#333}
 <script>
 const M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 function money(v){return '$'+v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function toggleCosts(){
+ document.getElementById('costs').style.display=document.getElementById('inc').checked?'block':'none';
+ calc();
+}
 function calc(){
  const P=+hp.value-+dp.value, yrs=+ty.value, n=yrs*12, i=+rt.value/100/12;
  const pay=i?P*i/(1-Math.pow(1+i,-n)):P/n;
@@ -137,21 +141,26 @@ function calc(){
  r5a.textContent=money(tot); r5b.textContent=money(tot*n);
  s1.textContent=money(+hp.value); s2.textContent=money(P); s3.textContent=money(+dp.value);
  s4.textContent=money(pay*n); s5.textContent=money(pay*n-P);
- const pm=(+sm.selectedIndex+ n)%12, py=+sy.value+Math.floor((+sm.selectedIndex+ n)/12);
+ const pm=(+sm.selectedIndex+n)%12, py=+sy.value+Math.floor((+sm.selectedIndex+n)/12);
  s6.textContent=M[pm]+'. '+py;
- const p1=pay/tot*100,p2=p1+mtx/tot*100,p3=p2+mins/tot*100;
- document.getElementById('donut').style.background='conic-gradient(#33689c 0 '+p1+'%, #7ab034 '+p1+'% '+p2+'%, #20b2aa '+p2+'% '+p3+'%, #a02020 '+p3+'% 100%)';
- document.getElementById('legend').innerHTML=
-  '<div><span class="sw" style="background:#33689c"></span>Principal &amp; Interest '+p1.toFixed(0)+'%</div>'+
-  '<div><span class="sw" style="background:#7ab034"></span>Property Taxes '+((p2-p1)).toFixed(0)+'%</div>'+
-  '<div><span class="sw" style="background:#20b2aa"></span>Home Insurance '+((p3-p2)).toFixed(0)+'%</div>'+
-  '<div><span class="sw" style="background:#a02020"></span>Other Costs '+(100-p3).toFixed(0)+'%</div>';
- let bal=P, mi=0, yInt=0, yPrin=0, totInt=0, months=0;
+ if(tot>0){
+  const p1=pay/tot*100,p2=p1+mtx/tot*100,p3=p2+mins/tot*100;
+  document.getElementById('donut').style.background='conic-gradient(#33689c 0 '+p1+'%, #7ab034 '+p1+'% '+p2+'%, #20b2aa '+p2+'% '+p3+'%, #a02020 '+p3+'% 100%)';
+  document.getElementById('legend').innerHTML=
+   '<div><span class="sw" style="background:#33689c"></span>Principal &amp; Interest '+p1.toFixed(0)+'%</div>'+
+   '<div><span class="sw" style="background:#7ab034"></span>Property Taxes '+(p2-p1).toFixed(0)+'%</div>'+
+   '<div><span class="sw" style="background:#20b2aa"></span>Home Insurance '+(p3-p2).toFixed(0)+'%</div>'+
+   '<div><span class="sw" style="background:#a02020"></span>Other Costs '+(100-p3).toFixed(0)+'%</div>';
+ }else{
+  document.getElementById('donut').style.background='#ddd';
+  document.getElementById('legend').innerHTML='';
+ }
+ let bal=P, yInt=0, yPrin=0, totInt=0, months=0;
  const xm=+document.getElementById('xm').value, xy=+document.getElementById('xy').value;
  const rows=[];
  while(bal>0.01&&months<n+240){
   const it=bal*i; let pr=pay+xm-it; if(pr>bal)pr=bal; bal-=pr; yInt+=it; yPrin+=pr; totInt+=it; months++;
-  if(xy>0&&months%12===0&&bal>0){const e=Math.min(xy,bal);bal-=e;yPrin+=e;totInt+=0;}
+  if(xy>0&&months%12===0&&bal>0){const e=Math.min(xy,bal);bal-=e;yPrin+=e;}
   if(months%12===0||bal<=0.01){rows.push([Math.ceil(months/12),yInt,yPrin,Math.max(0,bal)]);yInt=0;yPrin=0;}
  }
  let html='<tr><th>Year</th><th>Interest</th><th>Principal</th><th>Ending Balance</th></tr>';
@@ -162,4 +171,4 @@ function calc(){
 calc();
 </script>
 </body>
-  </html>
+</html>
