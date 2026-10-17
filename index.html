@@ -107,9 +107,10 @@ footer a{color:#333}
 </div>
 
 <div class="grid">
- <div class="card"><h3>Financial Calculators</h3>
+ <div class="card"><h3><a href="financial.html" style="color:var(--green);text-decoration:none">Financial Calculators</a></h3>
   <a onclick="showTool('loan')">Loan Calculator</a>
-  <a onclick="showTool('compound')">Compound Interest Calculator</a></div>
+  <a onclick="showTool('compound')">Compound Interest Calculator</a>
+  <a href="financial.html"><b>See all financial calculators →</b></a></div>
  <div class="card"><h3>Fitness &amp; Health Calculators</h3>
   <a onclick="showTool('bmi')">BMI Calculator</a></div>
  <div class="card"><h3>Math Calculators</h3>
@@ -132,7 +133,7 @@ footer a{color:#333}
 <!-- AD SLOT 3: بعد القبول الصق كود الوحدة الإعلانية هنا -->
 
 <footer>
- <a href="privacy.html">Privacy Policy</a> | <a href="#about">About</a> | <a href="mailto:you@example.com">Contact</a><br/>
+ <a href="privacy.html">Privacy Policy</a> | <a href="financial.html">Financial</a> | <a href="#about">About</a> | <a href="mailto:you@example.com">Contact</a><br/>
  © 2026 CalcPlus. All calculators are provided free of charge.
 </footer>
 
@@ -176,4 +177,4 @@ function calcDate(){const d1=new Date(date1.value),d2=new Date(date2.value);date
 function calcAge(){const b=new Date(ageB.value),n=new Date();let y=n.getFullYear()-b.getFullYear(),m=n.getMonth()-b.getMonth(),d=n.getDate()-b.getDate();if(d<0){m--;d+=30;}if(m<0){y--;m+=12;}ageRes.textContent='Age: '+y+' years, '+m+' months, '+d+' days';}
 </script>
 </body>
-  </html>
+</html>
