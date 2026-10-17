@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CalcPlus – Free Online Calculators</title>
+<meta name="description" content="Fast free online calculators: scientific, loan, compound interest, BMI, percentage, date and age calculators. No registration required."/>
+<!-- ===== GOOGLE ADSENSE =====
+بعد القبول: احذف هذا التعليق وضع كود أدسنس هنا بدل ca-pub-0000000000000000
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-0000000000000000" crossorigin="anonymous"></script>
+============================== -->
+<style>
+:root{--blue:#0d4f8b;--green:#3a7d2c;--link:#1a6ea8;--bg:#f5f7fa}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg)}
+header{background:var(--blue);color:#fff;padding:10px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.logo{font-size:24px;font-weight:700}
+.logo span{color:#9fe29f}
+header input{flex:1;min-width:140px;padding:8px;border:none;border-radius:4px}
+.calc-area{background:#cfdcea;padding:14px;display:flex;justify-content:center}
+.calc{background:#fff;border-radius:8px;padding:10px;box-shadow:0 2px 10px rgba(0,0,0,.25);width:100%;max-width:430px}
+#screen{direction:ltr;text-align:right;width:100%;min-height:48px;background:#33689c;color:#fff;font-size:22px;padding:8px 10px;border-radius:4px;margin-bottom:8px;overflow-x:auto;white-space:nowrap}
+.keys{direction:ltr;display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+.keys button{padding:11px 0;border:1px solid #b6c4d1;border-radius:4px;background:#e9eef4;font-size:14px;cursor:pointer}
+.keys .num{background:#b9cadd}
+.keys .eq{background:#8fb0cc;font-weight:700}
+.keys button:active{filter:brightness(.9)}
+.mode{display:flex;align-items:center;justify-content:center;gap:4px;font-size:11px;background:#f5f8fb;border:1px solid #dde5ec;border-radius:4px;grid-column:span 2}
+.ad-slot{max-width:970px;margin:14px auto;text-align:center;min-height:10px}
+#tools{max-width:900px;margin:0 auto;padding:10px}
+.tool{display:none;background:#fff;border-radius:8px;padding:16px;margin:10px 0;box-shadow:0 1px 5px rgba(0,0,0,.15)}
+.tool h3{margin:0 0 10px;color:var(--green)}
+.tool p{font-size:13px;color:#555;margin:0 0 8px}
+.tool label{display:block;margin:6px 0 2px;font-size:14px}
+.tool input{width:100%;padding:8px;border:1px solid #bbb;border-radius:4px}
+.tool button{margin-top:10px;padding:9px 22px;border:none;border-radius:4px;background:var(--green);color:#fff;font-size:15px;cursor:pointer}
+.res{margin-top:10px;font-weight:700;color:var(--blue);min-height:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;max-width:1000px;margin:0 auto;padding:16px}
+.card{background:#fff;border-radius:8px;padding:14px;box-shadow:0 1px 5px rgba(0,0,0,.12)}
+.card h3{color:var(--green);margin:0 0 8px;font-size:17px}
+.card a{display:block;color:var(--link);padding:4px 0;cursor:pointer;font-size:14px}
+.all{display:block;margin:6px auto 20px;padding:12px 30px;background:var(--green);color:#fff;border:none;border-radius:4px;font-size:16px;cursor:pointer}
+.page{max-width:900px;margin:0 auto;padding:0 16px 16px;color:#333;line-height:1.6}
+footer{background:#d9d9d9;padding:16px;font-size:13px;text-align:center;color:#333}
+footer a{color:#333}
+</style>
+</head>
+<body>
+<header>
+ <div class="logo">Calc<span>Plus</span></div>
+ <input id="q" placeholder="Search calculators..." oninput="search(this.value)"/>
+</header>
+
+<div class="calc-area">
+ <div class="calc">
+  <h1 style="font-size:16px;margin:0 0 8px;color:#0d4f8b">Free Scientific Calculator</h1>
+  <div id="screen">0</div>
+  <div class="keys">
+   <button onclick="p('sin(')">sin</button><button onclick="p('cos(')">cos</button><button onclick="p('tan(')">tan</button>
+   <label class="mode"><input type="radio" name="mu" checked onchange="deg=true">Deg <input type="radio" name="mu" onchange="deg=false">Rad</label>
+   <button onclick="back()">⌫</button>
+   <button onclick="p('sin⁻¹(')">sin⁻¹</button><button onclick="p('cos⁻¹(')">cos⁻¹</button><button onclick="p('tan⁻¹(')">tan⁻¹</button><button onclick="p('π')">π</button><button onclick="p('e')">e</button><button onclick="ac()">AC</button>
+   <button onclick="p('^')">xʸ</button><button onclick="p('^2')">x²</button><button onclick="p('√(')">√x</button><button onclick="p('e^(')">eˣ</button><button onclick="p('10^(')">10ˣ</button><button onclick="p('÷')">÷</button>
+   <button onclick="p('(')">(</button><button onclick="p(')')">)</button><button onclick="p('!')">n!</button><button onclick="p('%')">%</button><button onclick="neg()">±</button><button onclick="p('×')">×</button>
+   <button class="num" onclick="p('7')">7</button><button class="num" onclick="p('8')">8</button><button class="num" onclick="p('9')">9</button><button onclick="p('ln(')">ln</button><button onclick="p('log(')">log</button><button onclick="p('−')">−</button>
+   <button class="num" onclick="p('4')">4</button><button class="num" onclick="p('5')">5</button><button class="num" onclick="p('6')">6</button><button onclick="p('Ans')">Ans</button><button onclick="mAdd(1)">M+</button><button onclick="p('+')">+</button>
+   <button class="num" onclick="p('1')">1</button><button class="num" onclick="p('2')">2</button><button class="num" onclick="p('3')">3</button><button onclick="mRecall()">MR</button><button onclick="mAdd(-1)">M−</button><button onclick="mc()">MC</button>
+   <button class="num" style="grid-column:span 2" onclick="p('0')">0</button><button class="num" onclick="p('.')">.</button><button onclick="p(String(Math.floor(Math.random()*100)+1))">RND</button><button class="eq" style="grid-column:span 2" onclick="eq()">=</button>
+  </div>
+ </div>
+</div>
+
+<!-- AD SLOT 1: بعد القبول الصق كود الوحدة الإعلانية هنا -->
+
+<div id="tools">
+ <div class="tool" id="t-loan"><h3>Loan Calculator (Monthly Payment)</h3>
+  <p>Estimate your fixed monthly payment and total cost for an amortized loan.</p>
+  <label>Loan amount</label><input id="loanP" type="number">
+  <label>Annual interest rate %</label><input id="loanR" type="number" step="0.01">
+  <label>Years</label><input id="loanY" type="number">
+  <button onclick="calcLoan()">Calculate</button><div class="res" id="loanRes"></div></div>
+ <div class="tool" id="t-compound"><h3>Compound Interest Calculator</h3>
+  <p>See how your savings grow when interest is added back to the principal.</p>
+  <label>Principal</label><input id="cP" type="number">
+  <label>Annual rate %</label><input id="cR" type="number" step="0.01">
+  <label>Compounds per year</label><input id="cN" type="number" value="12">
+  <label>Years</label><input id="cT" type="number">
+  <button onclick="calcComp()">Calculate</button><div class="res" id="compRes"></div></div>
+ <div class="tool" id="t-bmi"><h3>BMI Calculator</h3>
+  <p>Body Mass Index is a quick screening ratio of weight to height.</p>
+  <label>Weight (kg)</label><input id="bW" type="number">
+  <label>Height (cm)</label><input id="bH" type="number">
+  <button onclick="calcBMI()">Calculate</button><div class="res" id="bmiRes"></div></div>
+ <div class="tool" id="t-percent"><h3>Percentage Calculator</h3>
+  <p>Find what X% of Y equals in one step.</p>
+  <input id="pX" type="number" placeholder="X"><input id="pY" type="number" placeholder="Y">
+  <button onclick="calcPercent()">Calculate</button><div class="res" id="percentRes"></div></div>
+ <div class="tool" id="t-date"><h3>Date Difference Calculator</h3>
+  <p>Count the exact number of days between two dates.</p>
+  <label>From</label><input id="date1" type="date">
+  <label>To</label><input id="date2" type="date">
+  <button onclick="calcDate()">Calculate</button><div class="res" id="dateRes"></div></div>
+ <div class="tool" id="t-age"><h3>Age Calculator</h3>
+  <p>Know your exact age in years, months and days.</p>
+  <label>Date of birth</label><input id="ageB" type="date">
+  <button onclick="calcAge()">Calculate</button><div class="res" id="ageRes"></div></div>
+</div>
+
+<div class="grid">
+ <div class="card"><h3>Financial Calculators</h3>
+  <a onclick="showTool('loan')">Loan Calculator</a>
+  <a onclick="showTool('compound')">Compound Interest Calculator</a></div>
+ <div class="card"><h3>Fitness &amp; Health Calculators</h3>
+  <a onclick="showTool('bmi')">BMI Calculator</a></div>
+ <div class="card"><h3>Math Calculators</h3>
+  <a onclick="showTool('percent')">Percentage Calculator</a>
+  <a onclick="window.scrollTo({top:0,behavior:'smooth'})">Scientific Calculator</a></div>
+ <div class="card"><h3>Other Calculators</h3>
+  <a onclick="showTool('age')">Age Calculator</a>
+  <a onclick="showTool('date')">Date Calculator</a></div>
+</div>
+<button class="all" onclick="document.querySelectorAll('.tool').forEach(t=>t.style.display='block');document.getElementById('tools').scrollIntoView({behavior:'smooth'})">All Calculators</button>
+
+<!-- AD SLOT 2: بعد القبول الصق كود الوحدة الإعلانية هنا -->
+
+<section class="page" id="about">
+ <h2>About CalcPlus</h2>
+ <p>CalcPlus is a small independent project built to make everyday math painless. Every tool on this site runs instantly in your browser: nothing is uploaded, nothing is stored, and nothing is sold. We keep the interface light so the pages load fast even on slow mobile connections.</p>
+ <p>Each calculator was coded and checked by hand. If you spot a wrong result, please email us — user reports are how this site gets better. All tools are free forever, with no sign-up and no limits.</p>
+</section>
+
+<!-- AD SLOT 3: بعد القبول الصق كود الوحدة الإعلانية هنا -->
+
+<footer>
+ <a href="privacy.html">Privacy Policy</a> | <a href="#about">About</a> | <a href="mailto:you@example.com">Contact</a><br/>
+ © 2026 CalcPlus. All calculators are provided free of charge.
+</footer>
+
+<script>
+let expr='',ans=0,mem=0,deg=true;
+const scr=document.getElementById('screen');
+function render(){scr.textContent=expr||'0';}
+function p(v){expr+=v;render();}
+function back(){expr=expr.slice(0,-1);render();}
+function ac(){expr='';render();}
+function neg(){expr=expr.startsWith('-')?expr.slice(1):'-'+expr;render();}
+function fact(n){if(n<0||n%1!==0)return NaN;let r=1;for(let i=2;i<=n;i++)r*=i;return r;}
+function compile(e){
+ e=e.replace(/sin⁻¹\(/g,'ASIN(').replace(/cos⁻¹\(/g,'ACOS(').replace(/tan⁻¹\(/g,'ATAN(');
+ e=e.replace(/sin\(/g,'SIN(').replace(/cos\(/g,'COS(').replace(/tan\(/g,'TAN(');
+ e=e.replace(/√\(/g,'SQRT(').replace(/ln\(/g,'LN(').replace(/log\(/g,'LOG(');
+ e=e.replace(/Ans/g,'('+ans+')');
+ e=e.replace(/π/g,'PI').replace(/e/g,'E');
+ e=e.replace(/(\d+(\.\d+)?)%/g,'($1/100)');
+ e=e.replace(/(\d+(\.\d+)?)!/g,'FACT($1)');
+ e=e.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/\^/g,'**');
+ return e;}
+function value(){
+ const body='const D=x=>deg?x*Math.PI/180:x,R=x=>deg?x*180/Math.PI:x;'
+ +'const SIN=x=>Math.sin(D(x)),COS=x=>Math.cos(D(x)),TAN=x=>Math.tan(D(x));'
+ +'const ASIN=x=>R(Math.asin(x)),ACOS=x=>R(Math.acos(x)),ATAN=x=>R(Math.atan(x));'
+ +'const SQRT=Math.sqrt,LN=Math.log,LOG=Math.log10,PI=Math.PI,E=Math.E;'
+ +'return ('+compile(expr)+');';
+ return new Function('deg','FACT',body)(deg,fact);}
+function eq(){try{const v=value();if(typeof v!=='number'||!isFinite(v))throw 0;ans=v;expr=String(+v.toFixed(10));render();}catch(e){scr.textContent='Error';expr='';}}
+function mAdd(s){try{mem+=s*value();}catch(e){}}
+function mRecall(){p(String(mem));}
+function mc(){mem=0;}
+function showTool(id){document.querySelectorAll('.tool').forEach(t=>t.style.display='none');const t=document.getElementById('t-'+id);t.style.display='block';t.scrollIntoView({behavior:'smooth'});}
+function search(q){document.querySelectorAll('.card a').forEach(a=>{a.style.display=a.textContent.toLowerCase().includes(q.toLowerCase())?'block':'none';});}
+function calcLoan(){const P=+loanP.value,r=+loanR.value/100/12,n=+loanY.value*12;const m=r?P*r/(1-Math.pow(1+r,-n)):P/n;loanRes.textContent='Monthly payment: '+m.toFixed(2)+' | Total: '+(m*n).toFixed(2);}
+function calcComp(){const A=+cP.value*Math.pow(1+(+cR.value/100)/+cN.value,+cN.value*+cT.value);compRes.textContent='Final amount: '+A.toFixed(2)+' | Profit: '+(A-(+cP.value)).toFixed(2);}
+function calcBMI(){const b=(+bW.value)/Math.pow(+bH.value/100,2);const c=b<18.5?'Underweight':b<25?'Normal':b<30?'Overweight':'Obese';bmiRes.textContent='BMI: '+b.toFixed(1)+' ('+c+')';}
+function calcPercent(){percentRes.textContent='Result: '+(+pX.value)*(+pY.value)/100;}
+function calcDate(){const d1=new Date(date1.value),d2=new Date(date2.value);dateRes.textContent='Difference: '+Math.abs(Math.round((d2-d1)/864e5))+' days';}
+function calcAge(){const b=new Date(ageB.value),n=new Date();let y=n.getFullYear()-b.getFullYear(),m=n.getMonth()-b.getMonth(),d=n.getDate()-b.getDate();if(d<0){m--;d+=30;}if(m<0){y--;m+=12;}ageRes.textContent='Age: '+y+' years, '+m+' months, '+d+' days';}
+</script>
+</body>
+  </html>
