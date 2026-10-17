@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Financial Calculators – CalcPlus</title>
+<meta name="description" content="Free financial calculators: mortgage, auto loan, compound interest, retirement, ROI, inflation, sales tax and more."/>
+<!-- ADSENSE: بعد القبول ضع كود الرأس هنا -->
+<style>
+:root{--blue:#0d4f8b;--green:#3a7d2c;--link:#1a6ea8;--bg:#f5f7fa}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg)}
+header{background:var(--blue);color:#fff;padding:10px 14px;display:flex;align-items:center;gap:10px}
+.logo{font-size:24px;font-weight:700;color:#fff;text-decoration:none}
+.logo span{color:#9fe29f}
+nav{margin-left:auto}
+nav a{color:#fff;text-decoration:none;font-size:14px}
+.page{max-width:1000px;margin:0 auto;padding:16px;color:#333;line-height:1.6}
+.page h1{color:var(--blue);margin:0 0 6px;font-size:24px}
+.ad-slot{max-width:970px;margin:14px auto;text-align:center}
+.groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;max-width:1000px;margin:0 auto;padding:0 16px}
+.card{background:#fff;border-radius:8px;padding:14px;box-shadow:0 1px 5px rgba(0,0,0,.12)}
+.card h3{color:var(--green);margin:0 0 8px;font-size:16px}
+.card a{display:block;color:var(--link);padding:4px 0;cursor:pointer;font-size:14px}
+#tools{max-width:900px;margin:0 auto;padding:10px}
+.tool{display:none;background:#fff;border-radius:8px;padding:16px;margin:10px 0;box-shadow:0 1px 5px rgba(0,0,0,.15)}
+.tool h3{margin:0 0 10px;color:var(--green)}
+.tool label{display:block;margin:6px 0 2px;font-size:14px}
+.tool input{width:100%;padding:8px;border:1px solid #bbb;border-radius:4px}
+.tool button{margin-top:10px;padding:9px 22px;border:none;border-radius:4px;background:var(--green);color:#fff;font-size:15px;cursor:pointer}
+.res{margin-top:10px;font-weight:700;color:var(--blue);min-height:20px}
+footer{background:#d9d9d9;padding:16px;font-size:13px;text-align:center;color:#333;margin-top:20px}
+footer a{color:#333}
+</style>
+</head>
+<body>
+<header>
+ <a class="logo" href="index.html">Calc<span>Plus</span></a>
+ <nav><a href="index.html">Home</a> | <a href="privacy.html">Privacy</a></nav>
+</header>
+
+<div class="page">
+<h1>Financial Calculators</h1>
+<p>A complete, free list of our money tools: mortgages, loans, savings, retirement, taxes and everyday math. Pick a calculator below — the tool opens instantly on this page.</p>
+</div>
+
+<!-- AD SLOT 1 -->
+
+<div class="groups">
+ <div class="card"><h3>Mortgage &amp; Real Estate</h3>
+  <a onclick="showTool('mortgage')">Mortgage Calculator</a>
+  <a onclick="showTool('down')">Down Payment Calculator</a>
+  <a onclick="showTool('rent')">Rent Affordability Calculator</a></div>
+ <div class="card"><h3>Auto</h3>
+  <a onclick="showTool('auto')">Auto Loan Calculator</a></div>
+ <div class="card"><h3>Investment</h3>
+  <a onclick="showTool('compound')">Compound Interest Calculator</a>
+  <a onclick="showTool('simple')">Simple Interest Calculator</a>
+  <a onclick="showTool('roi')">ROI Calculator</a>
+  <a onclick="showTool('fv')">Future Value Calculator</a>
+  <a onclick="showTool('pv')">Present Value Calculator</a></div>
+ <div class="card"><h3>Retirement</h3>
+  <a onclick="showTool('retire')">401(k) / Retirement Calculator</a></div>
+ <div class="card"><h3>Tax &amp; Salary</h3>
+  <a onclick="showTool('sales')">Sales Tax Calculator</a>
+  <a onclick="showTool('hourly')">Hourly to Salary Calculator</a></div>
+ <div class="card"><h3>Other</h3>
+  <a onclick="showTool('payoff')">Credit Card Payoff Calculator</a>
+  <a onclick="showTool('inflation')">Inflation Calculator</a></div>
+</div>
+
+<div id="tools">
+ <div class="tool" id="t-mortgage"><h3>Mortgage Calculator</h3>
+  <label>Home price</label><input id="mP" type="number">
+  <label>Down payment</label><input id="mD" type="number" value="0">
+  <label>Annual rate %</label><input id="mR" type="number" step="0.01">
+  <label>Years</label><input id="mY" type="number" value="30">
+  <button onclick="calcMortgage()">Calculate</button><div class="res" id="mortgageRes"></div></div>
+ <div class="tool" id="t-down"><h3>Down Payment Calculator</h3>
+  <label>Home price</label><input id="dPrice" type="number">
+  <label>Down payment %</label><input id="dPct" type="number" value="20">
+  <button onclick="calcDown()">Calculate</button><div class="res" id="downRes"></div></div>
+ <div class="tool" id="t-rent"><h3>Rent Affordability Calculator</h3>
+  <label>Monthly income</label><input id="rInc" type="number">
+  <button onclick="calcRent()">Calculate</button><div class="res" id="rentRes"></div></div>
+ <div class="tool" id="t-auto"><h3>Auto Loan Calculator</h3>
+  <label>Vehicle price</label><input id="aP" type="number">
+  <label>Down payment</label><input id="aD" type="number" value="0">
+  <label>Annual rate %</label><input id="aR" type="number" step="0.01">
+  <label>Years</label><input id="aY" type="number" value="5">
+  <button onclick="calcAuto()">Calculate</button><div class="res" id="autoRes"></div></div>
+ <div class="tool" id="t-compound"><h3>Compound Interest Calculator</h3>
+  <label>Starting principal</label><input id="cP" type="number">
+  <label>Monthly contribution</label><input id="cM" type="number" value="0">
+  <label>Annual rate %</label><input id="cR" type="number" step="0.01">
+  <label>Years</label><input id="cY" type="number">
+  <button onclick="calcCompound()">Calculate</button><div class="res" id="compRes"></div></div>
+ <div class="tool" id="t-simple"><h3>Simple Interest Calculator</h3>
+  <label>Principal</label><input id="sP" type="number">
+  <label>Annual rate %</label><input id="sR" type="number" step="0.01">
+  <label>Years</label><input id="sT" type="number">
+  <button onclick="calcSimple()">Calculate</button><div class="res" id="simpleRes"></div></div>
+ <div class="tool" id="t-roi"><h3>ROI Calculator</h3>
+  <label>Investment cost</label><input id="rCost" type="number">
+  <label>Final value / gain returned</label><input id="rGain" type="number">
+  <button onclick="calcROI()">Calculate</button><div class="res" id="roiRes"></div></div>
+ <div class="tool" id="t-fv"><h3>Future Value Calculator</h3>
+  <label>Present value</label><input id="fPV" type="number">
+  <label>Annual rate %</label><input id="fR" type="number" step="0.01">
+  <label>Years</label><input id="fY" type="number">
+  <button onclick="calcFV()">Calculate</button><div class="res" id="fvRes"></div></div>
+ <div class="tool" id="t-pv"><h3>Present Value Calculator</h3>
+  <label>Future value</label><input id="pFV" type="number">
+  <label>Annual rate %</label><input id="pR" type="number" step="0.01">
+  <label>Years</label><input id="pY" type="number">
+  <button onclick="calcPV()">Calculate</button><div class="res" id="pvRes"></div></div>
+ <div class="tool" id="t-retire"><h3>401(k) / Retirement Calculator</h3>
+  <label>Current savings</label><input id="retP" type="number">
+  <label>Monthly contribution</label><input id="retM" type="number">
+  <label>Annual return %</label><input id="retR" type="number" step="0.01">
+  <label>Years until retirement</label><input id="retY" type="number">
+  <button onclick="calcRetire()">Calculate</button><div class="res" id="retireRes"></div></div>
+ <div class="tool" id="t-sales"><h3>Sales Tax Calculator</h3>
+  <label>Price</label><input id="xP" type="number">
+  <label>Tax rate %</label><input id="xR" type="number" step="0.01">
+  <button onclick="calcSales()">Calculate</button><div class="res" id="salesRes"></div></div>
+ <div class="tool" id="t-hourly"><h3>Hourly to Salary Calculator</h3>
+  <label>Hourly rate</label><input id="hR" type="number">
+  <label>Hours per week</label><input id="hH" type="number" value="40">
+  <label>Weeks per year</label><input id="hW" type="number" value="52">
+  <button onclick="calcHourly()">Calculate</button><div class="res" id="hourlyRes"></div></div>
+ <div class="tool" id="t-payoff"><h3>Credit Card Payoff Calculator</h3>
+  <label>Balance</label><input id="ccB" type="number">
+  <label>APR %</label><input id="ccA" type="number" step="0.01">
+  <label>Monthly payment</label><input id="ccM" type="number">
+  <button onclick="calcPayoff()">Calculate</button><div class="res" id="payoffRes"></div></div>
+ <div class="tool" id="t-inflation"><h3>Inflation Calculator</h3>
+  <label>Amount today</label><input id="iA" type="number">
+  <label>Annual inflation %</label><input id="iR" type="number" step="0.01">
+  <label>Years</label><input id="iY" type="number">
+  <button onclick="calcInflation()">Calculate</button><div class="res" id="inflRes"></div></div>
+</div>
+
+<!-- AD SLOT 2 -->
+
+<footer>
+ <a href="privacy.html">Privacy Policy</a> | <a href="index.html">Home</a><br/>
+ © 2026 CalcPlus. All calculators are provided free of charge.
+</footer>
+
+<script>
+function showTool(id){document.querySelectorAll('.tool').forEach(t=>t.style.display='none');const t=document.getElementById('t-'+id);t.style.display='block';t.scrollIntoView({behavior:'smooth'});}
+function loanPay(P,rate,years){const r=rate/100/12,n=years*12;return r?P*r/(1-Math.pow(1+r,-n)):P/n;}
+function fvC(P,m,rate,years){const i=rate/100/12,n=years*12,g=Math.pow(1+i,n);return P*g+(i?m*(g-1)/i:m*n);}
+function calcMortgage(){const L=+mP.value-+mD.value,pay=loanPay(L,+mR.value,+mY.value),n=+mY.value*12;mortgageRes.textContent='Monthly payment: '+pay.toFixed(2)+' | Total interest: '+(pay*n-L).toFixed(2);}
+function calcDown(){const d=+dPrice.value*(+dPct.value/100);downRes.textContent='Down payment: '+d.toFixed(2)+' | Loan needed: '+(+dPrice.value-d).toFixed(2);}
+function calcRent(){rentRes.textContent='Recommended max rent (30% of income): '+(0.3*+rInc.value).toFixed(2)+' / month';}
+function calcAuto(){const L=+aP.value-+aD.value,pay=loanPay(L,+aR.value,+aY.value),n=+aY.value*12;autoRes.textContent='Monthly payment: '+pay.toFixed(2)+' | Total cost: '+(pay*n+ +aD.value).toFixed(2);}
+function calcCompound(){const f=fvC(+cP.value,+cM.value,+cR.value,+cY.value);compRes.textContent='Final balance: '+f.toFixed(2)+' | Growth: '+(f-(+cP.value+ +cM.value*12*+cY.value)).toFixed(2);}
+function calcSimple(){const P=+sP.value,t=P*(+sR.value/100)*+sT.value;simpleRes.textContent='Total: '+(P+t).toFixed(2)+' | Interest: '+t.toFixed(2);}
+function calcROI(){roiRes.textContent='ROI: '+(((+rGain.value-+rCost.value)/+rCost.value)*100).toFixed(2)+'%';}
+function calcFV(){fvRes.textContent='Future value: '+(+fPV.value*Math.pow(1+(+fR.value/100),+fY.value)).toFixed(2);}
+function calcPV(){pvRes.textContent='Present value: '+(+pFV.value/Math.pow(1+(+pR.value/100),+pY.value)).toFixed(2);}
+function calcRetire(){retireRes.textContent='Projected savings: '+fvC(+retP.value,+retM.value,+retR.value,+retY.value).toFixed(2);}
+function calcSales(){const t=+xP.value*(+xR.value/100);salesRes.textContent='Tax: '+t.toFixed(2)+' | Total: '+(+xP.value+t).toFixed(2);}
+function calcHourly(){const a=+hR.value*+hH.value*+hW.value;hourlyRes.textContent='Yearly: '+a.toFixed(2)+' | Monthly: '+(a/12).toFixed(2);}
+function calcPayoff(){const B=+ccB.value,r=+ccA.value/100/12,A=+ccM.value;if(A<=B*r){payoffRes.textContent='Payment too low: interest exceeds payment.';return;}const n=-Math.log(1-B*r/A)/Math.log(1+r);payoffRes.textContent='Months to payoff: '+Math.ceil(n)+' | Total interest: '+(A*n-B).toFixed(2);}
+function calcInflation(){inflRes.textContent='Equivalent future amount: '+(+iA.value*Math.pow(1+(+iR.value/100),+iY.value)).toFixed(2);}
+</script>
+</body>
+  </html>
