@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Mortgage Calculator – CalcPlus</title>
-<meta name="description" content="Free mortgage calculator with optional taxes, insurance, PMI, HOA and a full year-by-year amortization schedule."/>
+<meta name="description" content="Free advanced mortgage calculator: taxes, insurance, PMI, HOA, cost increases, extra and one-time payments, biweekly payback and full amortization schedule."/>
 <!-- ADSENSE: بعد القبول ضع كود الرأس هنا -->
 <style>
 *{box-sizing:border-box}
@@ -18,18 +18,24 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:#222}
 .crumb{font-size:12px;color:#777;padding:8px 14px 0;max-width:1100px;margin:0 auto}
 .crumb a{color:#1a6ea8}
 .wrap{display:flex;gap:22px;max-width:1100px;margin:0 auto;padding:6px 14px 20px;flex-wrap:wrap}
-.left{width:330px;flex-shrink:0}
+.left{width:340px;flex-shrink:0}
 @media(max-width:900px){.left{width:100%}}
 .right{flex:1;min-width:280px;max-width:100%}
 h1{color:#00427a;font-size:26px;margin:6px 0 10px}
 .form{background:#eef1f4;border:1px solid #cdd6dd;border-radius:6px;padding:14px}
 .form label{display:block;font-size:13px;margin:7px 0 2px;color:#333}
 .form input,.form select{width:100%;padding:7px;border:1px solid #9ab;border-radius:3px}
-.row2{display:flex;gap:6px}
+.row2{display:flex;gap:6px;align-items:center}
+.row2 span{font-size:13px;color:#555;white-space:nowrap}
 .chk{display:flex;gap:8px;align-items:center;margin:12px 0 4px;font-size:14px;font-weight:700}
 fieldset{border:1px solid #cdd6dd;border-radius:4px;margin:10px 0 0;padding:8px}
 legend{font-size:13px;font-weight:700;color:#00427a;padding:0 6px}
-button.calc{margin-top:12px;width:100%;padding:11px;border:none;border-radius:4px;background:#4e7d1e;color:#fff;font-size:16px;font-weight:700;cursor:pointer}
+.sec{font-size:14px;font-weight:700;margin:12px 0 4px;color:#222}
+.ctr{text-align:center;margin:10px 0}
+.linkbtn{color:#1a6ea8;text-decoration:underline;cursor:pointer;font-weight:700;font-size:14px}
+.btns{display:flex;gap:8px;margin-top:12px}
+.btns .calc{flex:2;padding:11px;border:none;border-radius:4px;background:#4e7d1e;color:#fff;font-size:16px;font-weight:700;cursor:pointer}
+.btns .clr{flex:1;padding:11px;border:none;border-radius:4px;background:#9aa0a6;color:#fff;font-size:16px;font-weight:700;cursor:pointer}
 .banner{background:#4e7d1e;color:#fff;border-radius:6px;padding:12px 16px;font-size:20px;font-weight:700;display:flex;justify-content:space-between;align-items:center;gap:10px}
 table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px;display:block;overflow-x:auto}
 th,td{border:1px solid #d5dfe8;padding:7px 9px;text-align:right;white-space:nowrap}
@@ -41,6 +47,8 @@ td:first-child,th:first-child{text-align:left}
 .legend div{font-size:13px;margin:3px 0}
 .sw{display:inline-block;width:12px;height:12px;margin-right:6px}
 h2{color:#00427a;font-size:20px;margin:18px 0 6px}
+.note{font-size:13px;color:#666;margin-top:8px}
+.bwres{display:none;background:#eaf3ea;border:1px solid #bcd6bc;border-radius:6px;padding:10px;margin-top:10px;font-size:14px;color:#245724;font-weight:700}
 footer{background:#d9d9d9;padding:14px;font-size:13px;text-align:center;color:#333;margin-top:10px}
 footer a{color:#333}
 </style>
@@ -71,14 +79,35 @@ footer a{color:#333}
     <input id="sy" type="number" value="2026" oninput="calc()">
    </div>
    <div class="chk"><input type="checkbox" id="inc" style="width:auto" onchange="toggleCosts()"><span>Include Taxes &amp; Costs Below</span></div>
-   <fieldset id="costs" style="display:none"><legend>Annual tax &amp; monthly costs</legend>
+   <fieldset id="costs" style="display:none"><legend>Annual Tax &amp; Cost</legend>
     <label>Property Taxes ($/year)</label><input id="ptx" type="number" value="4800" oninput="calc()">
     <label>Home Insurance ($/year)</label><input id="ins" type="number" value="1500" oninput="calc()">
     <label>PMI Insurance ($/month)</label><input id="pmi" type="number" value="0" oninput="calc()">
     <label>HOA Fee ($/month)</label><input id="hoa" type="number" value="0" oninput="calc()">
     <label>Other Costs ($/month)</label><input id="oth" type="number" value="0" oninput="calc()">
+    <div class="ctr"><a class="linkbtn" id="moreLink" onclick="toggleMore()">+ More Options</a></div>
+    <div id="moreOpts" style="display:none">
+     <div class="sec">Annual Tax &amp; Cost Increase</div>
+     <label>Property Taxes Increase (%)</label><input id="pti" type="number" step="0.01" value="0" oninput="calc()">
+     <label>Home Insurance Increase (%)</label><input id="ini" type="number" step="0.01" value="0" oninput="calc()">
+     <label>HOA Fee Increase (%)</label><input id="hoi" type="number" step="0.01" value="0" oninput="calc()">
+     <label>Other Costs Increase (%)</label><input id="oti" type="number" step="0.01" value="0" oninput="calc()">
+     <div class="sec">Extra Payments</div>
+     <label>Extra Monthly Pay ($)</label>
+     <div class="row2"><input id="xm" type="number" value="0" oninput="calc()"><span>from</span><select class="mo" id="xmM" onchange="calc()"></select><input id="xmY" type="number" value="2026" oninput="calc()"></div>
+     <label>Extra Yearly Pay ($)</label>
+     <div class="row2"><input id="xy" type="number" value="0" oninput="calc()"><span>from</span><select class="mo" id="xyM" onchange="calc()"></select><input id="xyY" type="number" value="2026" oninput="calc()"></div>
+     <label>Extra One-time Pay ($)</label>
+     <div class="row2"><input id="ot" type="number" value="0" oninput="calc()"><span>in</span><select class="mo" id="otM" onchange="calc()"></select><input id="otY" type="number" value="2026" oninput="calc()"></div>
+     <div class="ctr"><a class="linkbtn" id="addlLink" onclick="toggleAddl()">+ Additional One-Time Payments</a></div>
+     <div id="addlOpts" style="display:none"></div>
+    </div>
    </fieldset>
-   <button class="calc" onclick="calc()">Calculate</button>
+   <div class="chk"><input type="checkbox" id="bw" style="width:auto" onchange="calc()"><span>Show Biweekly Payback Results</span></div>
+   <div class="btns">
+    <button class="calc" onclick="calc()">Calculate</button>
+    <button class="clr" onclick="clearAll()">Clear</button>
+   </div>
   </div>
  </div>
 
@@ -104,6 +133,8 @@ footer a{color:#333}
    <tr><td>Total Interest</td><td id="s5">-</td></tr>
    <tr><td>Mortgage Payoff Date</td><td id="s6">-</td></tr>
   </table>
+  <div id="extraNote" class="note"></div>
+  <div id="biweek" class="bwres"></div>
   <!-- AD SLOT 1 -->
   <h2>Amortization Schedule (yearly)</h2>
   <table id="sched">
@@ -115,51 +146,85 @@ footer a{color:#333}
 <footer><a href="privacy.html">privacy policy</a> | <a href="financial.html">financial</a> | <a href="index.html">home</a><br/>© 2026 CalcPlus. All calculators are provided free of charge.</footer>
 
 <script>
-const M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MO='<option>Jan</option><option>Feb</option><option>Mar</option><option>Apr</option><option>May</option><option>Jun</option><option>Jul</option><option>Aug</option><option>Sep</option><option selected>Oct</option><option>Nov</option><option>Dec</option>';
+const MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+document.querySelectorAll('select.mo').forEach(s=>s.innerHTML=MO);
+let addlBuilt=false;
 function money(v){return '$'+v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
-function toggleCosts(){
- document.getElementById('costs').style.display=document.getElementById('inc').checked?'block':'none';
+function toggleCosts(){document.getElementById('costs').style.display=document.getElementById('inc').checked?'block':'none';calc();}
+function toggleMore(){const d=moreOpts.style.display!=='none';moreOpts.style.display=d?'none':'block';moreLink.textContent=d?'+ More Options':'\u2013 Fewer Options';}
+function toggleAddl(){if(!addlBuilt){let h='';for(let k=0;k<10;k++){h+='<div class="addlRow row2" style="margin:6px 0"><input class="aa" type="number" value="0" oninput="calc()"><span>in</span><select class="am" onchange="calc()">'+MO+'</select><input class="ay" type="number" value="2026" oninput="calc()"></div>';}addlOpts.innerHTML=h;addlBuilt=true;}
+ const d=addlOpts.style.display!=='none';addlOpts.style.display=d?'none':'block';addlLink.textContent=d?'+ Additional One-Time Payments':'\u2013 Hide Below Inputs';}
+function clearAll(){
+ const D={hp:'400000',dp:'80000',ty:'30',rt:'6.5',sy:'2026',ptx:'4800',ins:'1500',pmi:'0',hoa:'0',oth:'0',pti:'0',ini:'0',hoi:'0',oti:'0',xm:'0',xy:'0',ot:'0'};
+ for(const k in D)document.getElementById(k).value=D[k];
+ document.querySelectorAll('.addlRow .aa').forEach(a=>a.value='0');
+ document.querySelectorAll('.addlRow .ay').forEach(a=>a.value='2026');
+ document.querySelectorAll('.addlRow .am').forEach(a=>a.selectedIndex=9);
+ document.querySelectorAll('select.mo').forEach(s=>s.selectedIndex=9);
+ sm.selectedIndex=9;
+ inc.checked=false;bw.checked=false;
+ costs.style.display='none';
+ moreOpts.style.display='none';moreLink.textContent='+ More Options';
+ addlOpts.style.display='none';addlLink.textContent='+ Additional One-Time Payments';
  calc();
 }
 function calc(){
  const P=+hp.value-+dp.value, yrs=+ty.value, n=yrs*12, i=+rt.value/100/12;
  const pay=i?P*i/(1-Math.pow(1+i,-n)):P/n;
- const use=document.getElementById('inc').checked;
- const mtx=use?+ptx.value/12:0, mins=use?+ins.value/12:0, moth=use?(+pmi.value+ +hoa.value+ +oth.value):0;
- const tot=pay+mtx+mins+moth;
- document.getElementById('mpay').textContent=money(tot);
- r1a.textContent=money(pay); r1b.textContent=money(pay*n);
- r2a.textContent=money(mtx); r2b.textContent=money(mtx*n);
- r3a.textContent=money(mins); r3b.textContent=money(mins*n);
- r4a.textContent=money(moth); r4b.textContent=money(moth*n);
- r5a.textContent=money(tot); r5b.textContent=money(tot*n);
- s1.textContent=money(+hp.value); s2.textContent=money(P); s3.textContent=money(+dp.value);
- s4.textContent=money(pay*n); s5.textContent=money(pay*n-P);
- const pm=(+sm.selectedIndex+n)%12, py=+sy.value+Math.floor((+sm.selectedIndex+n)/12);
- s6.textContent=M[pm]+'. '+py;
- if(tot>0){
-  const p1=pay/tot*100,p2=p1+mtx/tot*100,p3=p2+mins/tot*100;
-  document.getElementById('donut').style.background='conic-gradient(#33689c 0 '+p1+'%, #7ab034 '+p1+'% '+p2+'%, #20b2aa '+p2+'% '+p3+'%, #a02020 '+p3+'% 100%)';
-  document.getElementById('legend').innerHTML=
-   '<div><span class="sw" style="background:#33689c"></span>Principal &amp; Interest '+p1.toFixed(0)+'%</div>'+
-   '<div><span class="sw" style="background:#7ab034"></span>Property Taxes '+(p2-p1).toFixed(0)+'%</div>'+
-   '<div><span class="sw" style="background:#20b2aa"></span>Home Insurance '+(p3-p2).toFixed(0)+'%</div>'+
-   '<div><span class="sw" style="background:#a02020"></span>Other Costs '+(100-p3).toFixed(0)+'%</div>';
- }else{
-  document.getElementById('donut').style.background='#ddd';
-  document.getElementById('legend').innerHTML='';
- }
- let bal=P, yInt=0, yPrin=0, totInt=0, months=0;
+ const use=inc.checked, smi=sm.selectedIndex, syv=+sy.value;
+ const tax0=use?+ptx.value/12:0, ins0=use?+ins.value/12:0, pmi0=use?+pmi.value:0, hoa0=use?+hoa.value:0, oth0=use?+oth.value:0;
+ const ti=+pti.value/100, ii=+ini.value/100, hi=+hoi.value/100, oi=+oti.value/100;
+ const xmV=+xm.value, xmS=(+xmY.value-syv)*12+(xmM.selectedIndex-smi);
+ const xyV=+xy.value, xyMi=xyM.selectedIndex, xyY=+xyY.value;
+ const otV=+ot.value, otMi=otM.selectedIndex, otY=+otY.value;
+ const addl=[];document.querySelectorAll('.addlRow').forEach(r=>{const a=+r.querySelector('.aa').value;if(a>0)addl.push([a,r.querySelector('.am').selectedIndex,+r.querySelector('.ay').value]);});
+ let bal=P,totInt=0,months=n,totTax=0,totIns=0,totPMI=0,totHoa=0,totOth=0,yInt=0,yPrin=0;
  const rows=[];
- while(bal>0.01&&months<n+12){
-  const it=bal*i; let pr=pay-it; if(pr>bal)pr=bal; bal-=pr; yInt+=it; yPrin+=pr; totInt+=it; months++;
-  if(months%12===0||bal<=0.01){rows.push([Math.ceil(months/12),yInt,yPrin,Math.max(0,bal)]);yInt=0;yPrin=0;}
+ for(let m=1;m<=n&&bal>0.01;m++){
+  const yy=syv+Math.floor((smi+m-1)/12), mi=(smi+m-1)%12, yx=Math.floor((m-1)/12);
+  const it=bal*i;let pr=pay-it,ex=0;
+  if(m-1>=xmS)ex+=xmV;
+  if(xyV>0&&mi===xyMi&&yy>=xyY)ex+=xyV;
+  if(otV>0&&mi===otMi&&yy===otY)ex+=otV;
+  addl.forEach(a=>{if(mi===a[1]&&yy===a[2])ex+=a[0];});
+  pr+=ex;if(pr>bal)pr=bal;
+  bal-=pr;totInt+=it;yInt+=it;yPrin+=pr;
+  totTax+=tax0*Math.pow(1+ti,yx);totIns+=ins0*Math.pow(1+ii,yx);totPMI+=pmi0;totHoa+=hoa0*Math.pow(1+hi,yx);totOth+=oth0*Math.pow(1+oi,yx);
+  months=m;
+  if(m%12===0||bal<=0.01){rows.push([Math.ceil(m/12),yInt,yPrin,Math.max(0,bal)]);yInt=0;yPrin=0;}
  }
+ const othM=pmi0+hoa0+oth0, totM=pay+tax0+ins0+othM;
+ mpay.textContent=money(totM);
+ r1a.textContent=money(pay);r1b.textContent=money(P+totInt);
+ r2a.textContent=money(tax0);r2b.textContent=money(totTax);
+ r3a.textContent=money(ins0);r3b.textContent=money(totIns);
+ r4a.textContent=money(othM);r4b.textContent=money(totPMI+totHoa+totOth);
+ r5a.textContent=money(totM);r5b.textContent=money(P+totInt+totTax+totIns+totPMI+totHoa+totOth);
+ s1.textContent=money(+hp.value);s2.textContent=money(P);s3.textContent=money(+dp.value);
+ s4.textContent=money(P+totInt);s5.textContent=money(totInt);
+ const pm=(smi+months)%12, py=syv+Math.floor((smi+months)/12);
+ s6.textContent=MN[pm]+'. '+py;
+ if(totM>0){
+  const p1=pay/totM*100,p2=p1+tax0/totM*100,p3=p2+ins0/totM*100;
+  donut.style.background='conic-gradient(#33689c 0 '+p1+'%, #7ab034 '+p1+'% '+p2+'%, #20b2aa '+p2+'% '+p3+'%, #a02020 '+p3+'% 100%)';
+  legend.innerHTML='<div><span class="sw" style="background:#33689c"></span>Principal &amp; Interest '+p1.toFixed(0)+'%</div><div><span class="sw" style="background:#7ab034"></span>Property Taxes '+(p2-p1).toFixed(0)+'%</div><div><span class="sw" style="background:#20b2aa"></span>Home Insurance '+(p3-p2).toFixed(0)+'%</div><div><span class="sw" style="background:#a02020"></span>Other Costs '+(100-p3).toFixed(0)+'%</div>';
+ }else{donut.style.background='#ddd';legend.innerHTML='';}
  let html='<tr><th>Year</th><th>Interest</th><th>Principal</th><th>Ending Balance</th></tr>';
  rows.forEach(r=>{html+='<tr><td>'+r[0]+'</td><td>'+money(r[1])+'</td><td>'+money(r[2])+'</td><td>'+money(r[3])+'</td></tr>';});
- document.getElementById('sched').innerHTML=html;
+ sched.innerHTML=html;
+ const exSum=xmV*12+xyV+otV+addl.reduce((s,a)=>s+a[0],0);
+ if(exSum>0){const base=pay*n-P;extraNote.textContent='With these extra payments you pay off in '+months+' months and save '+money(Math.max(0,base-totInt))+' in interest.';}
+ else extraNote.textContent='';
+ if(bw.checked){
+  const i2=i/2,p2y=pay/2;let b=P,per=0,bi=0;
+  while(b>0.01&&per<n*4){const it2=b*i2;let pr2=p2y-it2;if(pr2>b)pr2=b;b-=pr2;bi+=it2;per++;}
+  const mos=per/2;
+  biweek.style.display='block';
+  biweek.textContent='Biweekly payment: '+money(p2y)+' | Payoff: '+Math.floor(mos/12)+' yrs '+Math.round(mos%12)+' mos | Total interest: '+money(bi)+' | Save vs monthly: '+money(Math.max(0,(pay*n-P)-bi));
+ }else biweek.style.display='none';
 }
 calc();
 </script>
 </body>
-</html>
+ </html>
