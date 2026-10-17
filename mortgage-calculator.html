@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Mortgage Calculator – CalcPlus</title>
-<meta name="description" content="Free mortgage calculator with optional taxes, insurance, PMI, HOA, extra payments and a full year-by-year amortization schedule."/>
+<meta name="description" content="Free mortgage calculator with optional taxes, insurance, PMI, HOA and a full year-by-year amortization schedule."/>
 <!-- ADSENSE: بعد القبول ضع كود الرأس هنا -->
 <style>
 *{box-sizing:border-box}
@@ -20,7 +20,7 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:#222}
 .wrap{display:flex;gap:22px;max-width:1100px;margin:0 auto;padding:6px 14px 20px;flex-wrap:wrap}
 .left{width:330px;flex-shrink:0}
 @media(max-width:900px){.left{width:100%}}
-.right{flex:1;min-width:280px}
+.right{flex:1;min-width:280px;max-width:100%}
 h1{color:#00427a;font-size:26px;margin:6px 0 10px}
 .form{background:#eef1f4;border:1px solid #cdd6dd;border-radius:6px;padding:14px}
 .form label{display:block;font-size:13px;margin:7px 0 2px;color:#333}
@@ -30,18 +30,17 @@ h1{color:#00427a;font-size:26px;margin:6px 0 10px}
 fieldset{border:1px solid #cdd6dd;border-radius:4px;margin:10px 0 0;padding:8px}
 legend{font-size:13px;font-weight:700;color:#00427a;padding:0 6px}
 button.calc{margin-top:12px;width:100%;padding:11px;border:none;border-radius:4px;background:#4e7d1e;color:#fff;font-size:16px;font-weight:700;cursor:pointer}
-.banner{background:#4e7d1e;color:#fff;border-radius:6px;padding:12px 16px;font-size:20px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
-table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px}
-th,td{border:1px solid #d5dfe8;padding:7px 9px;text-align:right}
+.banner{background:#4e7d1e;color:#fff;border-radius:6px;padding:12px 16px;font-size:20px;font-weight:700;display:flex;justify-content:space-between;align-items:center;gap:10px}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px;display:block;overflow-x:auto}
+th,td{border:1px solid #d5dfe8;padding:7px 9px;text-align:right;white-space:nowrap}
 th{background:#e8edf2}
 td:first-child,th:first-child{text-align:left}
 .sum td:first-child{background:#e8edf2;font-weight:700}
 .donutwrap{display:flex;gap:16px;align-items:center;margin:14px 0;flex-wrap:wrap}
-.donut{width:150px;height:150px;border-radius:50%;background:#ddd}
+.donut{width:150px;height:150px;border-radius:50%;background:#ddd;flex-shrink:0}
 .legend div{font-size:13px;margin:3px 0}
 .sw{display:inline-block;width:12px;height:12px;margin-right:6px}
 h2{color:#00427a;font-size:20px;margin:18px 0 6px}
-.note{font-size:12px;color:#666}
 footer{background:#d9d9d9;padding:14px;font-size:13px;text-align:center;color:#333;margin-top:10px}
 footer a{color:#333}
 </style>
@@ -79,10 +78,6 @@ footer a{color:#333}
     <label>HOA Fee ($/month)</label><input id="hoa" type="number" value="0" oninput="calc()">
     <label>Other Costs ($/month)</label><input id="oth" type="number" value="0" oninput="calc()">
    </fieldset>
-   <fieldset><legend>Extra payments</legend>
-    <label>Extra Monthly Pay ($)</label><input id="xm" type="number" value="0" oninput="calc()">
-    <label>Extra Yearly Pay ($)</label><input id="xy" type="number" value="0" oninput="calc()">
-   </fieldset>
    <button class="calc" onclick="calc()">Calculate</button>
   </div>
  </div>
@@ -109,7 +104,6 @@ footer a{color:#333}
    <tr><td>Total Interest</td><td id="s5">-</td></tr>
    <tr><td>Mortgage Payoff Date</td><td id="s6">-</td></tr>
   </table>
-  <div id="extraNote" class="note"></div>
   <!-- AD SLOT 1 -->
   <h2>Amortization Schedule (yearly)</h2>
   <table id="sched">
@@ -156,17 +150,14 @@ function calc(){
   document.getElementById('legend').innerHTML='';
  }
  let bal=P, yInt=0, yPrin=0, totInt=0, months=0;
- const xm=+document.getElementById('xm').value, xy=+document.getElementById('xy').value;
  const rows=[];
- while(bal>0.01&&months<n+240){
-  const it=bal*i; let pr=pay+xm-it; if(pr>bal)pr=bal; bal-=pr; yInt+=it; yPrin+=pr; totInt+=it; months++;
-  if(xy>0&&months%12===0&&bal>0){const e=Math.min(xy,bal);bal-=e;yPrin+=e;}
+ while(bal>0.01&&months<n+12){
+  const it=bal*i; let pr=pay-it; if(pr>bal)pr=bal; bal-=pr; yInt+=it; yPrin+=pr; totInt+=it; months++;
   if(months%12===0||bal<=0.01){rows.push([Math.ceil(months/12),yInt,yPrin,Math.max(0,bal)]);yInt=0;yPrin=0;}
  }
  let html='<tr><th>Year</th><th>Interest</th><th>Principal</th><th>Ending Balance</th></tr>';
  rows.forEach(r=>{html+='<tr><td>'+r[0]+'</td><td>'+money(r[1])+'</td><td>'+money(r[2])+'</td><td>'+money(r[3])+'</td></tr>';});
  document.getElementById('sched').innerHTML=html;
- document.getElementById('extraNote').textContent=(xm+xy>0)?('With these extra payments you pay off in '+months+' months and total interest is '+money(totInt)+'.'):'';
 }
 calc();
 </script>
